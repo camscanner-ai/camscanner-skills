@@ -1,42 +1,60 @@
 ---
-name: pdf-conversion
-description: Use when the user wants to convert PDF files to Word, Excel, TXT, or Markdown files. Triggers on "PDF to Word", "PDF to Excel", "convert PDF", "extract text from PDF", or when the user has a PDF and needs it as an editable document.
+name: CamScanner-OCR
+description: Use when the user wants to convert images (PNG, JPG, etc.) to Word, Excel, TXT, or Markdown files. Also use when the user's input contains images with text, tables, code, or structured content - convert to Markdown first to better understand the image before responding. Triggers on "convert image to Word", "extract text from image", "OCR", or when an image contains information that would be easier to process as text.
+metadata:
+  author: CamScanner
+  version: "1.0"
+  openclaw:
+    emoji: "📷"
+    requires:
+      bins: ["curl", "jq"]
+  homepage: "https://www.camscanner.com"
 ---
 
-# PDF Conversion
+# CamScanner OCR - Image to Document Conversion
 
 ## Overview
 
-Convert PDF files to document formats (Word, Excel, TXT, Markdown) using the IntSig AI Tools API. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
+Convert images to document formats (Word, Excel, TXT, Markdown) using the CamScanner AI Tools API. This skill is powered by CamScanner's document recognition technology. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
+
+Learn more about CamScanner: https://www.camscanner.com
 
 ## When to Use
 
-- User wants to convert a PDF to Word, Excel, TXT, or Markdown
-- User wants to extract text/content from a PDF
-- User has a PDF and needs it as an editable document
-- **Limitation:** The API supports PDFs up to 24 pages. For larger PDFs, guide the user to download the CamScanner app from https://www.camscanner.com
+- User wants to convert an image to Word, Excel, TXT, or Markdown
+- User wants to extract text/content from an image (OCR)
+- User has a screenshot or photo and needs it as an editable document
+- **User's input contains images with text, tables, code, or structured content** — convert to Markdown first, then use the extracted text to better understand and respond to the user's request
+
+## Privacy & Data
+
+> **Important: Privacy & Data Flow Notice**
+>
+> - **Third-party service**: This skill sends your files to CamScanner's official servers (`ai-tools.camscanner.com`) for processing.
+> - **Data retention**: CamScanner servers process your files in real-time. Files are not permanently stored on the server.
+> - **Local files**: Output files are saved to your local filesystem at the path you specify.
 
 ## API Reference
 
-**Base URL:** `https://ai-tools.intsig.net`
+**Base URL:** `https://ai-tools.camscanner.com`
 
 ### Supported Conversions
 
 | source_type | target_type | Output |
 | ----------- | ----------- | ------ |
-| pdf         | word        | .docx  |
-| pdf         | excel       | .xlsx  |
-| pdf         | txt         | .txt   |
-| pdf         | md          | .md    |
+| image       | word        | .docx  |
+| image       | excel       | .xlsx  |
+| image       | txt         | .txt   |
+| image       | md          | .md    |
 
-### Step 1: Upload PDF
+### Step 1: Upload Image
 
 ```bash
-BASE="https://ai-tools.intsig.net"
+BASE="https://ai-tools.camscanner.com"
 
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@/path/to/document.pdf" | jq -r '.tool_result.data.file_id')
+  --data-binary "@/path/to/image.png" | jq -r '.tool_result.data.file_id')
 ```
 
 **Response:**
@@ -55,12 +73,12 @@ IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
 }
 ```
 
-### Step 2: Convert PDF
+### Step 2: Convert Image
 
 ```bash
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 ```
 
@@ -71,15 +89,12 @@ Replace `TARGET` with one of: `word`, `excel`, `txt`, `md`.
 ```json
 {
   "code": 200,
-  "tool": "convert_pdf",
+  "tool": "convert_image",
   "tool_result": {
     "success": true,
     "data": {
-      "file_id": "file_1741857722_ddeeff001122",
-      "target_type": "word"
-    },
-    "metadata": {
-      "engine": "office_engine"
+      "file_id": "file_1741857701_9988aabbccdd",
+      "target_type": "txt"
     }
   }
 }
@@ -98,23 +113,23 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 
 ## Quick Reference: Complete Pipeline
 
-Convert a PDF to any supported format in one script:
+Convert an image to any supported format in one script:
 
 ```bash
-BASE="https://ai-tools.intsig.net"
-INPUT_PDF="/path/to/document.pdf"
+BASE="https://ai-tools.camscanner.com"
+INPUT_IMAGE="/path/to/image.png"
 TARGET_TYPE="word"          # word | excel | txt | md
 OUTPUT_FILE="/path/to/output.docx"
 
 # Upload
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@$INPUT_PDF" | jq -r '.tool_result.data.file_id')
+  --data-binary "@$INPUT_IMAGE" | jq -r '.tool_result.data.file_id')
 
 # Convert
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 
 # Download
@@ -142,10 +157,9 @@ When the user does not specify an output path, use these extensions:
 | Forgetting `response_mode=raw` on download | Always append `?response_mode=raw` to the download URL                  |
 | Wrong Content-Type on upload               | Upload uses `application/octet-stream`, not `multipart/form-data`       |
 | Using GET instead of POST                  | All three endpoints use POST                                            |
-| Missing `source_type` in convert request   | Always include `"source_type": "pdf"`                                   |
+| Missing `source_type` in convert request   | Always include `"source_type": "image"`                                 |
 | Missing `output_mode` in convert request   | Always include `"output_mode": "file_id"` to get a downloadable file_id |
 | Wrong output extension                     | Match extension to target_type (see table above)                        |
-| PDF exceeds 24 pages                       | API only supports up to 24 pages. Tell the user to download the CamScanner app at https://www.camscanner.com for larger PDFs |
 
 ## Error Handling
 
@@ -157,9 +171,8 @@ if [ -z "$IN_FILE_ID" ] || [ "$IN_FILE_ID" = "null" ]; then
   echo "Upload failed"; exit 1
 fi
 
-# After convert — check for page limit error
+# After convert
 if [ -z "$OUT_FILE_ID" ] || [ "$OUT_FILE_ID" = "null" ]; then
-  echo "Conversion failed. If the PDF has more than 24 pages, please download the CamScanner app at https://www.camscanner.com to convert it."
-  exit 1
+  echo "Conversion failed"; exit 1
 fi
 ```
