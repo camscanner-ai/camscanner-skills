@@ -12,8 +12,11 @@ Licensed under Apache 2.0. Remote: `github.com/camscanner-ai/camscanner-skills`.
 
 ```
 skills/
-  CamScanner-OCR/SKILL.md              # Image (PNG, JPG, etc.) -> Word/Excel/TXT/Markdown
-  CamScanner-PDF-Converter/SKILL.md    # PDF -> Word/Excel/TXT/Markdown
+  CamScanner-PDF2Markdown/SKILL.md     # PDF -> Markdown
+  CamScanner-Image2Markdown/SKILL.md   # Image (PNG, JPG, etc.) -> Markdown
+  CamScanner-Any2Markdown/SKILL.md     # PDF/Image -> Markdown (auto-detect)
+  CamScanner-PDF2Office/SKILL.md       # PDF -> Word/Excel
+  CamScanner-Image2Office/SKILL.md     # Image (PNG, JPG, etc.) -> Word/Excel
 ```
 
 Each skill follows the same 3-step API pipeline: **upload** file, **convert** it, **download** the result.
@@ -31,7 +34,7 @@ Skills use `SKILL.md` files with YAML frontmatter (`name`, `description`, `metad
 - Upload uses `Content-Type: application/octet-stream` (not multipart)
 - Download requires `?response_mode=raw` query parameter for binary output
 - Convert requests must include both `source_type` and `output_mode: "file_id"`
-- Target types: `word` (.docx), `excel` (.xlsx), `txt` (.txt), `md` (.md)
+- Target types: `word` (.docx), `excel` (.xlsx), `md` (.md)
 
 ## Adding New Skills
 

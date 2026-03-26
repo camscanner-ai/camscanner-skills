@@ -1,29 +1,29 @@
 ---
-name: CamScanner-PDF-Converter
-description: Use when the user wants to convert PDF files to Word, Excel, TXT, or Markdown files. Triggers on "PDF to Word", "PDF to Excel", "convert PDF", "extract text from PDF", or when the user has a PDF and needs it as an editable document.
+name: CamScanner-Image2Office
+description: Use CamScanner to intelligently recognize image content and accurately convert to editable Word (.docx) or Excel (.xlsx) format. Handles tables, text, and complex layouts with high fidelity. Triggers on "image to Word", "image to Excel", "extract table from image to Excel", "OCR to Word", or when the user has an image containing text or tables and needs it as an editable Office document.
 metadata:
   author: CamScanner
   version: "1.0"
   openclaw:
-    emoji: "📄"
+    emoji: "📷"
     requires:
       bins: ["curl", "jq"]
   homepage: "https://www.camscanner.com"
 ---
 
-# CamScanner PDF Converter
+# CamScanner Image to Office
 
 ## Overview
 
-Convert PDF files to document formats (Word, Excel, TXT, Markdown) using the CamScanner AI Tools API. This skill is powered by CamScanner's document conversion technology. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
+CamScanner provides one-click conversion from images to structured documents, converting image documents to Word or Excel documents while preserving original formatting, greatly improving subsequent editing and processing efficiency. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
 Learn more about CamScanner: https://www.camscanner.com
 
 ## When to Use
 
-- User wants to convert a PDF to Word, Excel, TXT, or Markdown
-- User wants to extract text/content from a PDF
-- User has a PDF and needs it as an editable document
+- User wants to convert an image to Word (.docx) or Excel (.xlsx)
+- User has an image with tables and needs it as an Excel spreadsheet
+- User has an image with text or complex layouts and needs it as an editable Word document
 
 ## Privacy & Data
 
@@ -41,19 +41,17 @@ Learn more about CamScanner: https://www.camscanner.com
 
 | source_type | target_type | Output |
 | ----------- | ----------- | ------ |
-| pdf         | word        | .docx  |
-| pdf         | excel       | .xlsx  |
-| pdf         | txt         | .txt   |
-| pdf         | md          | .md    |
+| image       | word        | .docx  |
+| image       | excel       | .xlsx  |
 
-### Step 1: Upload PDF
+### Step 1: Upload Image
 
 ```bash
 BASE="https://ai-tools.camscanner.com"
 
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@/path/to/document.pdf" | jq -r '.tool_result.data.file_id')
+  --data-binary "@/path/to/image.png" | jq -r '.tool_result.data.file_id')
 ```
 
 **Response:**
@@ -72,31 +70,28 @@ IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
 }
 ```
 
-### Step 2: Convert PDF
+### Step 2: Convert Image
 
 ```bash
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 ```
 
-Replace `TARGET` with one of: `word`, `excel`, `txt`, `md`.
+Replace `TARGET` with one of: `word`, `excel`.
 
 **Response:**
 
 ```json
 {
   "code": 200,
-  "tool": "convert_pdf",
+  "tool": "convert_image",
   "tool_result": {
     "success": true,
     "data": {
-      "file_id": "file_1741857722_ddeeff001122",
+      "file_id": "file_1741857701_9988aabbccdd",
       "target_type": "word"
-    },
-    "metadata": {
-      "engine": "office_engine"
     }
   }
 }
@@ -115,23 +110,21 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 
 ## Quick Reference: Complete Pipeline
 
-Convert a PDF to any supported format in one script:
-
 ```bash
 BASE="https://ai-tools.camscanner.com"
-INPUT_PDF="/path/to/document.pdf"
-TARGET_TYPE="word"          # word | excel | txt | md
+INPUT_IMAGE="/path/to/image.png"
+TARGET_TYPE="word"          # word | excel
 OUTPUT_FILE="/path/to/output.docx"
 
 # Upload
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@$INPUT_PDF" | jq -r '.tool_result.data.file_id')
+  --data-binary "@$INPUT_IMAGE" | jq -r '.tool_result.data.file_id')
 
 # Convert
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 
 # Download
@@ -143,14 +136,10 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 
 ## File Extension Mapping
 
-When the user does not specify an output path, use these extensions:
-
 | target_type | Extension |
 | ----------- | --------- |
 | word        | .docx     |
 | excel       | .xlsx     |
-| txt         | .txt      |
-| md          | .md       |
 
 ## Common Mistakes
 
@@ -159,7 +148,7 @@ When the user does not specify an output path, use these extensions:
 | Forgetting `response_mode=raw` on download | Always append `?response_mode=raw` to the download URL                  |
 | Wrong Content-Type on upload               | Upload uses `application/octet-stream`, not `multipart/form-data`       |
 | Using GET instead of POST                  | All three endpoints use POST                                            |
-| Missing `source_type` in convert request   | Always include `"source_type": "pdf"`                                   |
+| Missing `source_type` in convert request   | Always include `"source_type": "image"`                                 |
 | Missing `output_mode` in convert request   | Always include `"output_mode": "file_id"` to get a downloadable file_id |
 | Wrong output extension                     | Match extension to target_type (see table above)                        |
 
