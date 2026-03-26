@@ -17,8 +17,6 @@ metadata:
 
 CamScanner provides professional document conversion capabilities that convert images to Markdown format for further document content parsing. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
-Learn more about CamScanner: https://www.camscanner.com
-
 ## When to Use
 
 - User wants to convert an image to Markdown

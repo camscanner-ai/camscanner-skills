@@ -17,8 +17,6 @@ metadata:
 
 CamScanner provides professional document conversion capabilities that convert images and PDF documents to Markdown format for further document content parsing. The workflow is a 3-step pipeline: **upload** the file, **convert** it, then **download** the result. The skill auto-detects whether the input is a PDF or image and uses the appropriate conversion endpoint.
 
-Learn more about CamScanner: https://www.camscanner.com
-
 ## When to Use
 
 - User wants to convert a document file to Markdown (format unspecified or mixed)
@@ -40,10 +38,10 @@ Learn more about CamScanner: https://www.camscanner.com
 
 ### Supported Conversions
 
-| source_type | target_type | Output | Endpoint       |
-| ----------- | ----------- | ------ | -------------- |
-| pdf         | md          | .md    | convert_pdf    |
-| image       | md          | .md    | convert_image  |
+| source_type | target_type | Output | Endpoint      |
+| ----------- | ----------- | ------ | ------------- |
+| pdf         | md          | .md    | convert_pdf   |
+| image       | md          | .md    | convert_image |
 
 ### Format Detection
 
@@ -163,7 +161,7 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 | Wrong Content-Type on upload               | Upload uses `application/octet-stream`, not `multipart/form-data`       |
 | Using GET instead of POST                  | All three endpoints use POST                                            |
 | Wrong endpoint for file type               | Use `convert_pdf` for PDFs, `convert_image` for images                  |
-| Wrong `source_type` for file type          | Use `"pdf"` for PDFs, `"image"` for images                             |
+| Wrong `source_type` for file type          | Use `"pdf"` for PDFs, `"image"` for images                              |
 | Missing `output_mode` in convert request   | Always include `"output_mode": "file_id"` to get a downloadable file_id |
 
 ## Error Handling

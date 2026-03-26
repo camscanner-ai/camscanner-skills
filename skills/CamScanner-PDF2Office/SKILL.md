@@ -17,8 +17,6 @@ metadata:
 
 CamScanner provides document conversion capabilities that convert PDF documents to Word or Excel documents while preserving original formatting. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
 
-Learn more about CamScanner: https://www.camscanner.com
-
 ## When to Use
 
 - User wants to convert a PDF to Word (.docx) or Excel (.xlsx)

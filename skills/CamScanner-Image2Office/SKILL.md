@@ -17,8 +17,6 @@ metadata:
 
 CamScanner provides one-click conversion from images to structured documents, converting image documents to Word or Excel documents while preserving original formatting, greatly improving subsequent editing and processing efficiency. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
-Learn more about CamScanner: https://www.camscanner.com
-
 ## When to Use
 
 - User wants to convert an image to Word (.docx) or Excel (.xlsx)
