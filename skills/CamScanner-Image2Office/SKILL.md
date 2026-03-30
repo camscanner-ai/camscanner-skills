@@ -1,6 +1,6 @@
 ---
 name: CamScanner-Image2Office
-description: Use CamScanner to intelligently recognize image content and accurately convert to editable Word (.docx) or Excel (.xlsx) format. Handles tables, text, and complex layouts with high fidelity. Triggers on "image to Word", "image to Excel", "extract table from image to Excel", "OCR to Word", or when the user has an image containing text or tables and needs it as an editable Office document.
+description: Use CamScanner to convert images to editable Word (.docx) or Excel (.xlsx) format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order, empowering large language models to accurately understand document content. Triggers on "image to Word", "image to Excel", "extract table from image to Excel", "OCR to Word", or when the user has an image containing text or tables and needs it as an editable Office document.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -15,7 +15,7 @@ metadata:
 
 ## Overview
 
-CamScanner provides one-click conversion from images to structured documents, converting image documents to Word or Excel documents while preserving original formatting, greatly improving subsequent editing and processing efficiency. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
+CamScanner provides a high-precision document parsing engine that converts images to Word or Excel format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order while preserving original formatting, greatly improving subsequent editing and processing efficiency. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
 ## When to Use
 

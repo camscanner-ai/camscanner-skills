@@ -1,6 +1,6 @@
 ---
 name: CamScanner-Image2Markdown
-description: Use CamScanner to intelligently recognize image content and accurately convert to Markdown format. Use when the user wants to convert images (PNG, JPG, etc.) to Markdown, or when images contain text, tables, code, or structured content that needs to be extracted. Also use when the user's input contains images - convert to Markdown first to better understand the image before responding. Triggers on "image to Markdown", "extract text from image", "OCR to Markdown", or when an image needs to be converted to text for processing.
+description: Use CamScanner to convert images to Markdown format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order, empowering large language models to accurately understand document content. Use when the user wants to convert images (PNG, JPG, etc.) to Markdown, or when images contain text, tables, code, or structured content that needs to be extracted. Also use when the user's input contains images - convert to Markdown first to better understand the image before responding. Triggers on "image to Markdown", "extract text from image", "OCR to Markdown", or when an image needs to be converted to text for processing.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -15,7 +15,7 @@ metadata:
 
 ## Overview
 
-CamScanner provides professional document conversion capabilities that convert images to Markdown format for further document content parsing. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
+CamScanner provides a high-precision document parsing engine that converts images to Markdown format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order — empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
 ## When to Use
 

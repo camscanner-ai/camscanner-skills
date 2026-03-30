@@ -1,6 +1,6 @@
 ---
 name: CamScanner-PDF2Markdown
-description: Use CamScanner to convert PDF documents to Markdown format while preserving original formatting, powered by a high-precision document parsing engine. Use when the user wants to convert PDF files to Markdown, extract content, summarize, or process PDFs. Triggers on "PDF to Markdown", "convert PDF to md", "extract PDF content as Markdown", or when the user has a PDF and needs it as Markdown for further editing or processing.
+description: Use CamScanner to convert PDF documents to Markdown format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, and outputs structured results in reading order, empowering large language models to accurately understand document content. Use when the user wants to convert PDF files to Markdown, extract content, summarize, or process PDFs. Triggers on "PDF to Markdown", "convert PDF to md", "extract PDF content as Markdown", or when the user has a PDF and needs it as Markdown for further editing or processing.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -15,7 +15,7 @@ metadata:
 
 ## Overview
 
-CamScanner provides a high-precision document parsing engine that converts PDF documents to Markdown format, empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
+CamScanner provides a high-precision document parsing engine that converts PDF documents to Markdown format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, and outputs structured results in reading order — empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
 
 ## When to Use
 

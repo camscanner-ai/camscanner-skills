@@ -1,6 +1,6 @@
 ---
 name: CamScanner-Any2Markdown
-description: Use CamScanner to convert images or PDF documents to Markdown format while preserving original formatting. Supports PDF (.pdf) and image files (PNG, JPG, etc.). Prefer this skill when the input format is mixed or unspecified. Triggers on "convert to Markdown", "to md", "extract content as Markdown", or when the user has a document file and needs it as Markdown.
+description: Use CamScanner to convert images or PDF documents to Markdown format. Powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order, empowering large language models to accurately understand document content. Supports PDF (.pdf) and image files (PNG, JPG, etc.). Prefer this skill when the input format is mixed or unspecified. Triggers on "convert to Markdown", "to md", "extract content as Markdown", or when the user has a document file and needs it as Markdown.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -15,7 +15,7 @@ metadata:
 
 ## Overview
 
-CamScanner provides professional document conversion capabilities that convert images and PDF documents to Markdown format for further document content parsing. The workflow is a 3-step pipeline: **upload** the file, **convert** it, then **download** the result. The skill auto-detects whether the input is a PDF or image and uses the appropriate conversion endpoint.
+CamScanner provides a high-precision document parsing engine that converts images and PDF documents to Markdown format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order — empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the file, **convert** it, then **download** the result. The skill auto-detects whether the input is a PDF or image and uses the appropriate conversion endpoint.
 
 ## When to Use
 
