@@ -1,6 +1,6 @@
 ---
 name: CamScanner-PDF2Office
-description: Use CamScanner to convert PDF documents to editable Word (.docx) or Excel (.xlsx) format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, and outputs structured results in reading order, empowering large language models to accurately understand document content. Triggers on "PDF to Word", "PDF to Excel", "convert PDF to docx", "convert PDF to xlsx", or when the user has a PDF and needs it as an editable Office document.
+description: Use CamScanner to convert PDF documents to editable Word (.docx) or Excel (.xlsx) format, with intelligent content recognition and accurate format preservation. Triggers on "PDF to Word", "PDF to Excel", "convert PDF to docx", "convert PDF to xlsx", or when the user has a PDF and needs it as an editable Office document.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -15,7 +15,7 @@ metadata:
 
 ## Overview
 
-CamScanner provides a high-precision document parsing engine that converts PDF documents to Word or Excel format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, and outputs structured results in reading order while preserving original formatting. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
+CamScanner provides document conversion capabilities that convert PDF documents to Word or Excel documents while preserving original formatting. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
 
 ## When to Use
 
