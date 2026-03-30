@@ -12,11 +12,11 @@ Licensed under Apache 2.0. Remote: `github.com/camscanner-ai/camscanner-skills`.
 
 ```
 skills/
-  CamScanner-PDF2Markdown/SKILL.md     # PDF -> Markdown
-  CamScanner-Image2Markdown/SKILL.md   # Image (PNG, JPG, etc.) -> Markdown
-  CamScanner-Any2Markdown/SKILL.md     # PDF/Image -> Markdown (auto-detect)
-  CamScanner-PDF2Office/SKILL.md       # PDF -> Word/Excel
-  CamScanner-Image2Office/SKILL.md     # Image (PNG, JPG, etc.) -> Word/Excel
+  camscanner-pdf2markdown/SKILL.md     # PDF -> Markdown
+  camscanner-image2markdown/SKILL.md   # Image (PNG, JPG, etc.) -> Markdown
+  camscanner-any2markdown/SKILL.md     # PDF/Image -> Markdown (auto-detect)
+  camscanner-pdf2office/SKILL.md       # PDF -> Word/Excel
+  camscanner-image2office/SKILL.md     # Image (PNG, JPG, etc.) -> Word/Excel
 ```
 
 Each skill follows the same 3-step API pipeline: **upload** file, **convert** it, **download** the result.

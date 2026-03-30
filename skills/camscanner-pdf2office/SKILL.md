@@ -1,28 +1,27 @@
 ---
-name: CamScanner-Image2Markdown
-description: Use CamScanner to convert images to Markdown format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order, empowering large language models to accurately understand document content. Use when the user wants to convert images (PNG, JPG, etc.) to Markdown, or when images contain text, tables, code, or structured content that needs to be extracted. Also use when the user's input contains images - convert to Markdown first to better understand the image before responding. Triggers on "image to Markdown", "extract text from image", "OCR to Markdown", or when an image needs to be converted to text for processing.
+name: camscanner-pdf2office
+description: Use CamScanner to convert PDF documents to editable Word (.docx) or Excel (.xlsx) format, with intelligent content recognition and accurate format preservation. Triggers on "PDF to Word", "PDF to Excel", "convert PDF to docx", "convert PDF to xlsx", or when the user has a PDF and needs it as an editable Office document.
 metadata:
   author: CamScanner
   version: "1.0"
   openclaw:
-    emoji: "📷"
+    emoji: "📄"
     requires:
       bins: ["curl", "jq"]
   homepage: "https://www.camscanner.com"
 ---
 
-# CamScanner Image to Markdown
+# CamScanner PDF to Office
 
 ## Overview
 
-CamScanner provides a high-precision document parsing engine that converts images to Markdown format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order — empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
+CamScanner provides document conversion capabilities that convert PDF documents to Word or Excel documents while preserving original formatting. The workflow is a 3-step pipeline: **upload** the PDF, **convert** it, then **download** the result.
 
 ## When to Use
 
-- User wants to convert an image to Markdown
-- User wants to extract text/content from an image as Markdown (OCR)
-- User has a screenshot or photo with text, tables, or structured content
-- **User's input contains images** — convert to Markdown first, then use the extracted text to better understand and respond to the user's request
+- User wants to convert a PDF to Word (.docx) or Excel (.xlsx)
+- User wants to make a PDF editable
+- User has a PDF and needs it as an Office document
 
 ## Privacy & Data
 
@@ -40,16 +39,17 @@ CamScanner provides a high-precision document parsing engine that converts image
 
 | source_type | target_type | Output |
 | ----------- | ----------- | ------ |
-| image       | md          | .md    |
+| pdf         | word        | .docx  |
+| pdf         | excel       | .xlsx  |
 
-### Step 1: Upload Image
+### Step 1: Upload PDF
 
 ```bash
 BASE="https://ai-tools.camscanner.com"
 
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@/path/to/image.png" | jq -r '.tool_result.data.file_id')
+  --data-binary "@/path/to/document.pdf" | jq -r '.tool_result.data.file_id')
 ```
 
 **Response:**
@@ -68,26 +68,28 @@ IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
 }
 ```
 
-### Step 2: Convert Image to Markdown
+### Step 2: Convert PDF
 
 ```bash
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"md\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 ```
+
+Replace `TARGET` with one of: `word`, `excel`.
 
 **Response:**
 
 ```json
 {
   "code": 200,
-  "tool": "convert_image",
+  "tool": "convert_pdf",
   "tool_result": {
     "success": true,
     "data": {
-      "file_id": "file_1741857701_9988aabbccdd",
-      "target_type": "md"
+      "file_id": "file_1741857722_ddeeff001122",
+      "target_type": "word"
     }
   }
 }
@@ -99,7 +101,7 @@ OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
 curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
   -H "Content-Type: application/json" \
   -d "{\"file_id\":\"$OUT_FILE_ID\"}" \
-  -o /path/to/output.md
+  -o /path/to/output.docx
 ```
 
 **Critical:** The `response_mode=raw` query parameter is required to get the binary file. Without it, the response is JSON.
@@ -108,18 +110,19 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 
 ```bash
 BASE="https://ai-tools.camscanner.com"
-INPUT_IMAGE="/path/to/image.png"
-OUTPUT_FILE="/path/to/output.md"
+INPUT_PDF="/path/to/document.pdf"
+TARGET_TYPE="word"          # word | excel
+OUTPUT_FILE="/path/to/output.docx"
 
 # Upload
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
   -H "Content-Type: application/octet-stream" \
-  --data-binary "@$INPUT_IMAGE" | jq -r '.tool_result.data.file_id')
+  --data-binary "@$INPUT_PDF" | jq -r '.tool_result.data.file_id')
 
 # Convert
-OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
+OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_pdf/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"md\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"pdf\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 
 # Download
@@ -129,6 +132,13 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
   -o "$OUTPUT_FILE"
 ```
 
+## File Extension Mapping
+
+| target_type | Extension |
+| ----------- | --------- |
+| word        | .docx     |
+| excel       | .xlsx     |
+
 ## Common Mistakes
 
 | Mistake                                    | Fix                                                                     |
@@ -136,8 +146,9 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 | Forgetting `response_mode=raw` on download | Always append `?response_mode=raw` to the download URL                  |
 | Wrong Content-Type on upload               | Upload uses `application/octet-stream`, not `multipart/form-data`       |
 | Using GET instead of POST                  | All three endpoints use POST                                            |
-| Missing `source_type` in convert request   | Always include `"source_type": "image"`                                 |
+| Missing `source_type` in convert request   | Always include `"source_type": "pdf"`                                   |
 | Missing `output_mode` in convert request   | Always include `"output_mode": "file_id"` to get a downloadable file_id |
+| Wrong output extension                     | Match extension to target_type (see table above)                        |
 
 ## Error Handling
 

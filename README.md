@@ -8,11 +8,11 @@ These skills enable any AI agent (Claude Code, Cursor, Windsurf, etc.) to conver
 
 | Skill | Description | Supported Targets |
 | ----- | ----------- | ----------------- |
-| [CamScanner-PDF2Markdown](skills/CamScanner-PDF2Markdown/SKILL.md) | Convert PDF documents to Markdown with high-precision document parsing. | Markdown |
-| [CamScanner-Image2Markdown](skills/CamScanner-Image2Markdown/SKILL.md) | Intelligently recognize image content and convert to Markdown. Also auto-triggers when input images contain text/tables/code. | Markdown |
-| [CamScanner-Any2Markdown](skills/CamScanner-Any2Markdown/SKILL.md) | Convert PDF or image files to Markdown with auto-detection of input format. | Markdown |
-| [CamScanner-PDF2Office](skills/CamScanner-PDF2Office/SKILL.md) | Convert PDF documents to editable Word or Excel with accurate format preservation. | Word, Excel |
-| [CamScanner-Image2Office](skills/CamScanner-Image2Office/SKILL.md) | Recognize image content and convert to editable Word or Excel with high fidelity. | Word, Excel |
+| [camscanner-pdf2markdown](skills/camscanner-pdf2markdown/SKILL.md) | Convert PDF documents to Markdown with high-precision document parsing. | Markdown |
+| [camscanner-image2markdown](skills/camscanner-image2markdown/SKILL.md) | Intelligently recognize image content and convert to Markdown. Also auto-triggers when input images contain text/tables/code. | Markdown |
+| [camscanner-any2markdown](skills/camscanner-any2markdown/SKILL.md) | Convert PDF or image files to Markdown with auto-detection of input format. | Markdown |
+| [camscanner-pdf2office](skills/camscanner-pdf2office/SKILL.md) | Convert PDF documents to editable Word or Excel with accurate format preservation. | Word, Excel |
+| [camscanner-image2office](skills/camscanner-image2office/SKILL.md) | Recognize image content and convert to editable Word or Excel with high fidelity. | Word, Excel |
 
 ## Install
 

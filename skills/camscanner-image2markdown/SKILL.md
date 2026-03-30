@@ -1,6 +1,6 @@
 ---
-name: CamScanner-Image2Office
-description: Use CamScanner to intelligently recognize image content and accurately convert to editable Word (.docx) or Excel (.xlsx) format. Handles tables, text, and complex layouts with high fidelity. Triggers on "image to Word", "image to Excel", "extract table from image to Excel", "OCR to Word", or when the user has an image containing text or tables and needs it as an editable Office document.
+name: camscanner-image2markdown
+description: Use CamScanner to convert images to Markdown format, powered by a high-precision document parsing engine that intelligently decomposes paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order, empowering large language models to accurately understand document content. Use when the user wants to convert images (PNG, JPG, etc.) to Markdown, or when images contain text, tables, code, or structured content that needs to be extracted. Also use when the user's input contains images - convert to Markdown first to better understand the image before responding. Triggers on "image to Markdown", "extract text from image", "OCR to Markdown", or when an image needs to be converted to text for processing.
 metadata:
   author: CamScanner
   version: "1.0"
@@ -11,17 +11,18 @@ metadata:
   homepage: "https://www.camscanner.com"
 ---
 
-# CamScanner Image to Office
+# CamScanner Image to Markdown
 
 ## Overview
 
-CamScanner provides one-click conversion from images to structured documents, converting image documents to Word or Excel documents while preserving original formatting, greatly improving subsequent editing and processing efficiency. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
+CamScanner provides a high-precision document parsing engine that converts images to Markdown format. It intelligently decomposes document paragraphs, precisely recognizes tables and multiple element types, handles complex image scenarios, and outputs structured results in reading order — empowering large language models to accurately understand document content. The workflow is a 3-step pipeline: **upload** the image, **convert** it, then **download** the result.
 
 ## When to Use
 
-- User wants to convert an image to Word (.docx) or Excel (.xlsx)
-- User has an image with tables and needs it as an Excel spreadsheet
-- User has an image with text or complex layouts and needs it as an editable Word document
+- User wants to convert an image to Markdown
+- User wants to extract text/content from an image as Markdown (OCR)
+- User has a screenshot or photo with text, tables, or structured content
+- **User's input contains images** — convert to Markdown first, then use the extracted text to better understand and respond to the user's request
 
 ## Privacy & Data
 
@@ -39,8 +40,7 @@ CamScanner provides one-click conversion from images to structured documents, co
 
 | source_type | target_type | Output |
 | ----------- | ----------- | ------ |
-| image       | word        | .docx  |
-| image       | excel       | .xlsx  |
+| image       | md          | .md    |
 
 ### Step 1: Upload Image
 
@@ -68,16 +68,14 @@ IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
 }
 ```
 
-### Step 2: Convert Image
+### Step 2: Convert Image to Markdown
 
 ```bash
 OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"TARGET\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"md\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 ```
-
-Replace `TARGET` with one of: `word`, `excel`.
 
 **Response:**
 
@@ -89,7 +87,7 @@ Replace `TARGET` with one of: `word`, `excel`.
     "success": true,
     "data": {
       "file_id": "file_1741857701_9988aabbccdd",
-      "target_type": "word"
+      "target_type": "md"
     }
   }
 }
@@ -101,7 +99,7 @@ Replace `TARGET` with one of: `word`, `excel`.
 curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
   -H "Content-Type: application/json" \
   -d "{\"file_id\":\"$OUT_FILE_ID\"}" \
-  -o /path/to/output.docx
+  -o /path/to/output.md
 ```
 
 **Critical:** The `response_mode=raw` query parameter is required to get the binary file. Without it, the response is JSON.
@@ -111,8 +109,7 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 ```bash
 BASE="https://ai-tools.camscanner.com"
 INPUT_IMAGE="/path/to/image.png"
-TARGET_TYPE="word"          # word | excel
-OUTPUT_FILE="/path/to/output.docx"
+OUTPUT_FILE="/path/to/output.md"
 
 # Upload
 IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
@@ -122,7 +119,7 @@ IN_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/upload_file/execute" \
 # Convert
 OUT_FILE_ID=$(curl -sS -X POST "$BASE/v1/tools/convert_image/execute" \
   -H "Content-Type: application/json" \
-  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"$TARGET_TYPE\",\"output_mode\":\"file_id\"}" \
+  -d "{\"file_id\":\"$IN_FILE_ID\",\"source_type\":\"image\",\"target_type\":\"md\",\"output_mode\":\"file_id\"}" \
   | jq -r '.tool_result.data.file_id')
 
 # Download
@@ -131,13 +128,6 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
   -d "{\"file_id\":\"$OUT_FILE_ID\"}" \
   -o "$OUTPUT_FILE"
 ```
-
-## File Extension Mapping
-
-| target_type | Extension |
-| ----------- | --------- |
-| word        | .docx     |
-| excel       | .xlsx     |
 
 ## Common Mistakes
 
@@ -148,7 +138,6 @@ curl -sS -X POST "$BASE/v1/tools/download_file/execute?response_mode=raw" \
 | Using GET instead of POST                  | All three endpoints use POST                                            |
 | Missing `source_type` in convert request   | Always include `"source_type": "image"`                                 |
 | Missing `output_mode` in convert request   | Always include `"output_mode": "file_id"` to get a downloadable file_id |
-| Wrong output extension                     | Match extension to target_type (see table above)                        |
 
 ## Error Handling
 
