@@ -17,6 +17,9 @@ skills/
   camscanner-any2markdown/SKILL.md     # PDF/Image -> Markdown (auto-detect)
   camscanner-pdf2office/SKILL.md       # PDF -> Word/Excel
   camscanner-image2office/SKILL.md     # Image (PNG, JPG, etc.) -> Word/Excel
+  camscanner-extract-formula/SKILL.md  # Image -> Extract formulas as PNG
+  camscanner-image-hd/SKILL.md        # Image -> HD enhanced image
+  camscanner-translate-image/SKILL.md  # Image -> Translated image (preserving layout)
 ```
 
 Each skill follows the same 3-step API pipeline: **upload** file, **convert** it, **download** the result.
@@ -28,13 +31,13 @@ Skills use `SKILL.md` files with YAML frontmatter (`name`, `description`, `metad
 ## Key API Details (CamScanner AI Tools)
 
 - **Base URL:** `https://ai-tools.camscanner.com`
-- **Shared endpoints:** `upload_file`, `download_file` (same for both skills)
-- **Conversion endpoints differ:** `convert_image` for images, `convert_pdf` for PDFs
+- **Shared endpoints:** `upload_file`, `download_file` (same for all skills)
+- **Conversion endpoints differ:** `convert_image` for images, `convert_pdf` for PDFs, `extract_image` for formula extraction, `image_hd` for HD enhancement, `translate_image` for image translation
 - All endpoints are **POST only**
 - Upload uses `Content-Type: application/octet-stream` (not multipart)
 - Download requires `?response_mode=raw` query parameter for binary output
 - Convert requests must include both `source_type` and `output_mode: "file_id"`
-- Target types: `word` (.docx), `excel` (.xlsx), `md` (.md)
+- Target types: `word` (.docx), `excel` (.xlsx), `md` (.md), `png` (formula extraction / image translation), `jpg` (HD enhancement)
 
 ## Adding New Skills
 
